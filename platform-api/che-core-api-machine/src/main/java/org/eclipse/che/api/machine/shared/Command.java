@@ -11,12 +11,28 @@
 package org.eclipse.che.api.machine.shared;
 
 /**
- * Command that can be used to create {@link Process} in a machine
+ * Command that can be used to create {@link Process} in a machine.
  *
  * @author gazarenkov
+ * @author Eugene Voevodin
  */
 public interface Command {
-    String getName();
 
-    String getCommandLine();
+    //TODO consider: (workspaceId + name + creator) as id
+
+    String getId(); // command12345679
+
+    //TODO consider: name validation
+
+    String getName(); //MVN_CLEAN_INSTALL
+
+    String getCommandLine();//mvn clean install
+
+    String getCreator(); //user123456789
+
+    String getWorkspaceId();// workspace123456789
+
+    //TODO consider: scope
+
+    String getVisibility(); //public
 }
