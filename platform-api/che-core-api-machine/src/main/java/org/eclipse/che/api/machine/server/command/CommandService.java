@@ -12,6 +12,7 @@ package org.eclipse.che.api.machine.server.command;
 
 import com.google.inject.Inject;
 
+import org.eclipse.che.api.core.rest.Service;
 import org.eclipse.che.api.core.rest.annotations.GenerateLink;
 import org.eclipse.che.api.machine.server.dao.CommandDao;
 import org.eclipse.che.api.machine.shared.dto.CommandDescriptor;
@@ -41,7 +42,7 @@ import static org.eclipse.che.api.machine.server.Constants.LINK_REL_REMOVE_COMMA
  * @author Eugene Voevodin
  */
 @Path("/command")
-public class CommandService {
+public class CommandService extends Service {
 
     private final CommandDao commandDao;
 
