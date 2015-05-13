@@ -54,7 +54,7 @@ public class CommandService {
     @Path("/{ws-id}")
     @Consumes(APPLICATION_JSON)
     @GenerateLink(rel = LINK_REL_CREATE_COMMAND)
-    @RolesAllowed({"workspace/admin", "workspace/developer", "system/admin", "system/manager"})
+    @RolesAllowed({"workspace/admin", "workspace/developer"})
     public Response createCommand(@PathParam("ws-id") String workspaceId, NewCommand command) {
         return null;
     }
