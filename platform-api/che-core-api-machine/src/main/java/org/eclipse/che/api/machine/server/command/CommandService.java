@@ -68,9 +68,9 @@ public class CommandService {
     }
 
     @GET
-    @Path("/{ws-id}/all") // TODO consider /{ws-id}/available or /{ws-id}/list
+    @Path("/{ws-id}/all")
     @Produces(APPLICATION_JSON)
-    public List<CommandDescriptor> getAvailableCommands(@PathParam("ws-id") String workspaceId) {
+    public List<CommandDescriptor> getCommands(@PathParam("ws-id") String workspaceId) {
         return null;
     }
 

@@ -100,6 +100,6 @@ public interface CommandDao {
      * @throws ServerException
      *         when any error occurs
      */
-    List<Command> getAvailable(String workspaceId, String creator) throws ServerException;
+    List<Command> getCommands(String workspaceId, String creator) throws ServerException;
 }
 
