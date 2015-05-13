@@ -1,0 +1,105 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2015 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.che.api.machine.server.dao;
+
+import org.eclipse.che.api.core.ConflictException;
+import org.eclipse.che.api.core.NotFoundException;
+import org.eclipse.che.api.core.ServerException;
+import org.eclipse.che.api.machine.shared.Command;
+
+import java.util.List;
+
+/**
+ * Data access object for {@link Command}
+ *
+ * @author Eugene Voevodin
+ */
+public interface CommandDao {
+
+    /**
+     * Creates new command
+     * <p>
+     * Each command which is going to be created should have unique
+     * combination of <i>workspaceId, name, creator</i>, it means that
+     * user may create only one command in the same workspace with the same name.
+     *
+     * @param command
+     *         command to create
+     * @throws NullPointerException
+     *         when {@code command} is null
+     * @throws ConflictException
+     *         when command with specified identifier or with combination of
+     *         specified <i>name, workspaceId, creator</i> already exists
+     * @throws ServerException
+     *         when any other error occurs
+     */
+    void create(Command command) throws ConflictException, ServerException;
+
+    /**
+     * Updates existing command
+     * <p>
+     * All data except of command identifier, creator and workspace identifier may be updated
+     *
+     * @param update
+     *         command update
+     * @throws NullPointerException
+     *         when {@code update} is null
+     * @throws NotFoundException
+     *         when command with specified identifier does not exist
+     * @throws ServerException
+     *         when any other error occurs
+     */
+    void update(Command update) throws NotFoundException, ServerException;
+
+    /**
+     * Removes command
+     * <p>
+     * If recipe with specified {@code id} doesn't exist then nothing will be done
+     *
+     * @param id
+     *         command identifier
+     * @throws ServerException
+     *         when any error occurs
+     */
+    void remove(String id) throws ServerException;
+
+    /**
+     * Returns command with specified {@code id} or throws {@link NotFoundException}
+     * when command with such identifier doesn't exist
+     *
+     * @param id
+     *         command identifier to search command
+     * @return found command
+     * @throws NullPointerException
+     *         when {@code id} is {@code null}
+     * @throws NotFoundException
+     *         when command with specified {@code id} was not found
+     * @throws ServerException
+     *         when any other error occurs
+     */
+    Command getById(String id) throws NotFoundException, ServerException;
+
+    /**
+     * Searches for commands which are available for certain user in certain workspace
+     * <p>
+     * Command is available for user when it has <i>public</i> visibility or user is command creator
+     *
+     * @param workspaceId
+     *         workspace identifier to search related commands
+     * @param creator
+     *         user identifier to search created by certain user commands
+     * @return found commands
+     * @throws ServerException
+     *         when any error occurs
+     */
+    List<Command> getAvailable(String workspaceId, String creator) throws ServerException;
+}
+

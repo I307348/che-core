@@ -18,16 +18,10 @@ import org.eclipse.che.dto.shared.DTO;
  * Description of command to execute
  *
  * @author andrew00x
+ * @author Eugene Voevodin
  */
 @DTO
 public interface CommandDescriptor extends Command, Hyperlinks {
-    void setName(String name);
-
-    CommandDescriptor withName(String name);
-
-    void setCommandLine(String commandLine);
-
-    CommandDescriptor withCommandLine(String commandLine);
 
     /**
      * Channel of websocket where command execution logs should be put
@@ -37,4 +31,20 @@ public interface CommandDescriptor extends Command, Hyperlinks {
     void setOutputChannel(String outputChannel);
 
     CommandDescriptor withOutputChannel(String outputChannel);
+
+    CommandDescriptor withId(String id);
+
+    CommandDescriptor withName(String name);
+
+    CommandDescriptor withCreator(String creator);
+
+    CommandDescriptor withCommandLine(String commandLine);
+
+    CommandDescriptor withWorkspaceId(String workspaceId);
+
+    CommandDescriptor withVisibility(String visibility);
+
+    CommandDescriptor withType(String type);
+
+    CommandDescriptor withWorkingDir(String workingDir);
 }

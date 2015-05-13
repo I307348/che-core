@@ -8,61 +8,43 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.api.machine.shared;
+package org.eclipse.che.api.machine.shared.dto;
+
+import org.eclipse.che.dto.shared.DTO;
 
 /**
- * Command that can be used to create {@link Process} in a machine.
- *
- * @author gazarenkov
  * @author Eugene Voevodin
  */
-public interface Command {
-
-    String getId();
-
-    void setId(String id);
-
-    Command withId(String id);
+@DTO
+public interface NewCommand {
 
     String getName();
 
     void setName(String name);
 
-    Command withName(String name);
+    NewCommand withName(String name);
 
     String getCommandLine();
 
     void setCommandLine(String commandLine);
 
-    Command withCommandLine(String commandLine);
-
-    String getCreator();
-
-    void setCreator(String creator);
-
-    Command withCreator(String creator);
-
-    String getWorkspaceId();
-
-    void setWorkspaceId(String workspaceId);
-
-    Command withWorkspaceId(String workspaceId);
+    NewCommand withCommandLine(String commandLine);
 
     String getVisibility();
 
     void setVisibility(String visibility);
 
-    Command withVisibility(String visibility);
+    NewCommand withVisibility(String visibility);
 
     String getType();
 
     void setType(String type);
 
-    Command withType(String type);
+    NewCommand withType(String type);
 
     String getWorkingDir();
 
     void setWorkingDir(String workingDir);
 
-    Command withWorkingDir(String workingDir);
+    NewCommand withWorkingDir(String workingDir);
 }
