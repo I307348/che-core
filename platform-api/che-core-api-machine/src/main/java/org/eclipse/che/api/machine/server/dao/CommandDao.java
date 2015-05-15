@@ -85,7 +85,7 @@ public interface CommandDao {
      * @throws ServerException
      *         when any other error occurs
      */
-    Command getById(String id) throws NotFoundException, ServerException;
+    Command getCommand(String id) throws NotFoundException, ServerException;
 
     /**
      * Searches for commands which are available for certain user in certain workspace

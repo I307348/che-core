@@ -35,13 +35,11 @@ public class CommandImpl implements Command {
         return id;
     }
 
-    @Override
     public void setId(String id) {
         this.id = id;
     }
 
-    @Override
-    public Command withId(String id) {
+    public CommandImpl withId(String id) {
         this.id = id;
         return this;
     }
@@ -51,13 +49,11 @@ public class CommandImpl implements Command {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    @Override
-    public Command withName(String name) {
+    public CommandImpl withName(String name) {
         this.name = name;
         return this;
     }
@@ -67,13 +63,11 @@ public class CommandImpl implements Command {
         return commandLine;
     }
 
-    @Override
     public void setCommandLine(String commandLine) {
         this.commandLine = commandLine;
     }
 
-    @Override
-    public Command withCommandLine(String commandLine) {
+    public CommandImpl withCommandLine(String commandLine) {
         this.commandLine = commandLine;
         return this;
     }
@@ -83,13 +77,11 @@ public class CommandImpl implements Command {
         return creator;
     }
 
-    @Override
     public void setCreator(String creator) {
         this.creator = creator;
     }
 
-    @Override
-    public Command withCreator(String creator) {
+    public CommandImpl withCreator(String creator) {
         this.creator = creator;
         return this;
     }
@@ -99,13 +91,11 @@ public class CommandImpl implements Command {
         return workspaceId;
     }
 
-    @Override
     public void setWorkspaceId(String workspaceId) {
         this.workspaceId = workspaceId;
     }
 
-    @Override
-    public Command withWorkspaceId(String workspaceId) {
+    public CommandImpl withWorkspaceId(String workspaceId) {
         this.workspaceId = workspaceId;
         return this;
     }
@@ -115,13 +105,11 @@ public class CommandImpl implements Command {
         return visibility;
     }
 
-    @Override
     public void setVisibility(String visibility) {
         this.visibility = visibility;
     }
 
-    @Override
-    public Command withVisibility(String visibility) {
+    public CommandImpl withVisibility(String visibility) {
         this.visibility = visibility;
         return this;
     }
@@ -131,13 +119,11 @@ public class CommandImpl implements Command {
         return type;
     }
 
-    @Override
     public void setType(String type) {
         this.type = type;
     }
 
-    @Override
-    public Command withType(String type) {
+    public CommandImpl withType(String type) {
         this.type = type;
         return this;
     }
@@ -147,13 +133,11 @@ public class CommandImpl implements Command {
         return workingDir;
     }
 
-    @Override
     public void setWorkingDir(String workingDir) {
         this.workingDir = workingDir;
     }
 
-    @Override
-    public Command withWorkingDir(String workingDir) {
+    public CommandImpl withWorkingDir(String workingDir) {
         this.workingDir = workingDir;
         return this;
     }

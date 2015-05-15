@@ -10,39 +10,30 @@
  *******************************************************************************/
 package org.eclipse.che.api.machine.shared.dto;
 
+import org.eclipse.che.api.machine.shared.Command;
 import org.eclipse.che.dto.shared.DTO;
 
 /**
  * @author Eugene Voevodin
  */
 @DTO
-public interface CommandUpdate {
+public interface CommandUpdate extends Command {
 
-    String getName();
+    void setId(String id);
+
+    CommandUpdate withId(String id);
 
     void setName(String name);
 
     CommandUpdate withName(String name);
 
-    String getCommandLine();
-
     void setCommandLine(String commandLine);
 
     CommandUpdate withCommandLine(String commandLine);
 
-    String getVisibility();
-
     void setVisibility(String visibility);
 
     CommandUpdate withVisibility(String visibility);
-
-    String getType();
-
-    void setType(String type);
-
-    CommandUpdate withType(String type);
-
-    String getWorkingDir();
 
     void setWorkingDir(String workingDir);
 

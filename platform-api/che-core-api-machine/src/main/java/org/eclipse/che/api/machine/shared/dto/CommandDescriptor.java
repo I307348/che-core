@@ -34,17 +34,33 @@ public interface CommandDescriptor extends Command, Hyperlinks {
 
     CommandDescriptor withId(String id);
 
+    void setId(String id);
+
     CommandDescriptor withName(String name);
+
+    void setName(String name);
 
     CommandDescriptor withCreator(String creator);
 
+    void setCreator(String creator);
+
     CommandDescriptor withCommandLine(String commandLine);
+
+    void setCommandLine(String commandLine);
 
     CommandDescriptor withWorkspaceId(String workspaceId);
 
+    void setWorkspaceId(String workspaceId);
+
     CommandDescriptor withVisibility(String visibility);
+
+    void setVisibility(String visibility);
 
     CommandDescriptor withType(String type);
 
+    void setType(String type);
+
     CommandDescriptor withWorkingDir(String workingDir);
+
+    void setWorkingDir(String workingDir);
 }

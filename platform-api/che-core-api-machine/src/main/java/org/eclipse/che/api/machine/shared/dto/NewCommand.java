@@ -10,39 +10,30 @@
  *******************************************************************************/
 package org.eclipse.che.api.machine.shared.dto;
 
+import org.eclipse.che.api.machine.shared.Command;
 import org.eclipse.che.dto.shared.DTO;
 
 /**
  * @author Eugene Voevodin
  */
 @DTO
-public interface NewCommand {
-
-    String getName();
+public interface NewCommand extends Command {
 
     void setName(String name);
 
     NewCommand withName(String name);
 
-    String getCommandLine();
-
     void setCommandLine(String commandLine);
 
     NewCommand withCommandLine(String commandLine);
-
-    String getVisibility();
 
     void setVisibility(String visibility);
 
     NewCommand withVisibility(String visibility);
 
-    String getType();
-
     void setType(String type);
 
     NewCommand withType(String type);
-
-    String getWorkingDir();
 
     void setWorkingDir(String workingDir);
 
