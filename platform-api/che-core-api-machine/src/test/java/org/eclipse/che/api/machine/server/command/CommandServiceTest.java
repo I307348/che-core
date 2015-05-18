@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.che.api.machine.server.command;
 
-import com.google.common.collect.FluentIterable;
 import com.jayway.restassured.response.Response;
 
 import org.eclipse.che.api.core.rest.ApiExceptionMapper;
@@ -18,6 +17,7 @@ import org.eclipse.che.api.core.rest.shared.dto.ServiceError;
 import org.eclipse.che.api.machine.server.dao.CommandDao;
 import org.eclipse.che.api.machine.shared.Command;
 import org.eclipse.che.api.machine.shared.dto.CommandDescriptor;
+import org.eclipse.che.api.machine.shared.dto.CommandUpdate;
 import org.eclipse.che.api.machine.shared.dto.NewCommand;
 import org.eclipse.che.commons.env.EnvironmentContext;
 import org.eclipse.che.commons.user.UserImpl;
@@ -40,12 +40,13 @@ import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.everrest.assured.JettyHttpServer.ADMIN_USER_PASSWORD;
 import static org.everrest.assured.JettyHttpServer.SECURE_PATH;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.everrest.assured.JettyHttpServer.ADMIN_USER_NAME;
@@ -98,7 +99,7 @@ public class CommandServiceTest {
     }
 
     @Test
-    public void shouldThrowForbiddenExceptionWithNewCommandWhichNameIsNull() {
+    public void shouldThrowForbiddenExceptionOnCreateCommandWithNewCommandWhichNameIsNull() {
         final NewCommand newCommand = newDto(NewCommand.class).withCommandLine("mvn clean install");
 
         final Response response = given().auth()
@@ -113,7 +114,7 @@ public class CommandServiceTest {
     }
 
     @Test
-    public void shouldThrowForbiddenExceptionWithNewCommandWhichNameIsEmpty() {
+    public void shouldThrowForbiddenExceptionOnCreateCommandWithNewCommandWhichNameIsEmpty() {
         final NewCommand newCommand = newDto(NewCommand.class).withCommandLine("mvn clean install")
                                                               .withName("");
 
@@ -129,7 +130,7 @@ public class CommandServiceTest {
     }
 
     @Test
-    public void shouldThrowForbiddenExceptionWithNewCommandWhichCommandLineIsNull() {
+    public void shouldThrowForbiddenExceptionOnCreateCommandWithNewCommandWhichCommandLineIsNull() {
         final NewCommand newCommand = newDto(NewCommand.class).withName("MVN_CLEAN_INSTALL");
 
         final Response response = given().auth()
@@ -144,7 +145,7 @@ public class CommandServiceTest {
     }
 
     @Test
-    public void shouldThrowForbiddenExceptionWithNewCommandWhichCommandLineIsEmpty() {
+    public void shouldThrowForbiddenExceptionOnCreateCommandWithNewCommandWhichCommandLineIsEmpty() {
         final NewCommand newCommand = newDto(NewCommand.class).withName("MVN_CLEAN_INSTALL")
                                                               .withCommandLine("");
 
@@ -187,7 +188,7 @@ public class CommandServiceTest {
     }
 
     @Test
-    public void shouldUsePrivateVisibilityAsDefaultWhenCreatingNewRecipeWithNullVisibility() throws Exception {
+    public void shouldUsePrivateVisibilityAsDefaultWhenCreatingNewCommandWithNullVisibility() throws Exception {
         final NewCommand newCommand = newDto(NewCommand.class).withName("MVN_CLEAN_INSTALL")
                                                               .withCommandLine("mvn clean install");
         final Response response = given().auth()
@@ -250,6 +251,7 @@ public class CommandServiceTest {
     @Test
     public void shouldBeAbleToGetCommandWithPublicVisibilityForAnyUser() throws Exception {
         final CommandImpl command = new CommandImpl().withId("command123")
+                                                     .withWorkspaceId("workspace123")
                                                      .withVisibility("public")
                                                      .withCreator("someone");
         when(commandDao.getCommand(command.getId())).thenReturn(command);
@@ -264,7 +266,15 @@ public class CommandServiceTest {
 
     @Test
     public void shouldBeAbleToGetCommands() throws Exception {
-        when(commandDao.getCommands("workspace123", USER_ID)).thenReturn(asList(mock(Command.class), mock(Command.class)));
+        final Command command1 = new CommandImpl().withId("command123")
+                                                  .withWorkspaceId("workspace123")
+                                                  .withVisibility("public")
+                                                  .withCreator("someone");
+        final Command command2 = new CommandImpl().withId("command234")
+                                                  .withWorkspaceId("workspace123")
+                                                  .withVisibility("public")
+                                                  .withCreator("someone");
+        when(commandDao.getCommands("workspace123", USER_ID)).thenReturn(asList(command1, command2));
 
         final Response response = given().auth()
                                          .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)
@@ -275,6 +285,109 @@ public class CommandServiceTest {
         JsonArray<CommandDescriptor> descriptors = DtoFactory.getInstance()
                                                              .createListDtoFromJson(response.body().print(), CommandDescriptor.class);
         assertEquals(descriptors.size(), 2);
+    }
+
+    @Test
+    public void shouldBeAbleToRemoveCommand() throws Exception {
+        final CommandImpl command = new CommandImpl().withId("command123")
+                                                     .withCreator(USER_ID);
+        when(commandDao.getCommand(command.getId())).thenReturn(command);
+
+        final Response response = given().auth()
+                                         .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)
+                                         .when()
+                                         .delete(SECURE_PATH + "/command/" + command.getId());
+
+        assertEquals(response.getStatusCode(), 204);
+        verify(commandDao).remove(command.getId());
+    }
+
+    @Test
+    public void shouldNotBeAbleToRemoveCommandIfCurrentUserIsNotCommandCreator() throws Exception {
+        final CommandImpl command = new CommandImpl().withId("command123")
+                                                     .withCreator("someone");
+        when(commandDao.getCommand(command.getId())).thenReturn(command);
+
+        final Response response = given().auth()
+                                         .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)
+                                         .when()
+                                         .delete(SECURE_PATH + "/command/" + command.getId());
+
+        assertEquals(response.getStatusCode(), 403);
+        final String expectedMessage = "User 'user123' doesn't have access to update command 'command123'";
+        assertEquals(unwrapDto(response, ServiceError.class).getMessage(), expectedMessage);
+        verify(commandDao, never()).remove(command.getId());
+    }
+
+    @Test
+    public void shouldThrowForbiddenExceptionWhenUpdateCommandWithNullBody() {
+        final Response response = given().auth()
+                                         .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)
+                                         .contentType("application/json")
+                                         .when()
+                                         .put(SECURE_PATH + "/command");
+
+        assertEquals(response.getStatusCode(), 403);
+        assertEquals(unwrapDto(response, ServiceError.class).getMessage(), "Command update required");
+    }
+
+    @Test
+    public void shouldThrowForbiddenExceptionOnUpdateCommandWithCommandUpdateWhichIdIsNull() {
+        final Response response = given().auth()
+                                         .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)
+                                         .contentType("application/json")
+                                         .body(newDto(CommandUpdate.class))
+                                         .when()
+                                         .put(SECURE_PATH + "/command");
+
+        assertEquals(response.getStatusCode(), 403);
+        assertEquals(unwrapDto(response, ServiceError.class).getMessage(), "Command id required");
+    }
+
+    @Test
+    public void shouldBeAbleToUpdateCommand() throws Exception {
+        final CommandUpdate update = newDto(CommandUpdate.class).withId("command123")
+                                                                .withName("new name")
+                                                                .withCommandLine("new command line")
+                                                                .withVisibility("private");
+        final Command command = new CommandImpl().withId("command123")
+                                                 .withVisibility("private")
+                                                 .withWorkspaceId("workspace123")
+                                                 .withCreator(USER_ID);
+        when(commandDao.getCommand(command.getId())).thenReturn(command);
+
+        final Response response = given().auth()
+                                         .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)
+                                         .body(update)
+                                         .contentType("application/json")
+                                         .when()
+                                         .put(SECURE_PATH + "/command");
+
+        assertEquals(response.getStatusCode(), 200);
+        verify(commandDao).update(any(CommandUpdate.class));
+
+    }
+
+    @Test
+    public void shouldNotBeAbleToUpdateCommandIfCurrentUserIsNotCommandCreator() throws Exception {
+        final CommandUpdate update = newDto(CommandUpdate.class).withId("command123")
+                                                                .withName("new name")
+                                                                .withCommandLine("new command line")
+                                                                .withVisibility("private");
+        final Command command = new CommandImpl().withId("command123")
+                                                 .withCreator("someone");
+        when(commandDao.getCommand(command.getId())).thenReturn(command);
+
+        final Response response = given().auth()
+                                         .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)
+                                         .body(update)
+                                         .contentType("application/json")
+                                         .when()
+                                         .put(SECURE_PATH + "/command");
+
+        assertEquals(response.getStatusCode(), 403);
+        final String expectedMessage = format("User '%s' doesn't have access to update command '%s'", USER_ID, command.getId());
+        assertEquals(unwrapDto(response, ServiceError.class).getMessage(), expectedMessage);
     }
 
     private static <T> T newDto(Class<T> clazz) {

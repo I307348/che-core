@@ -19,6 +19,8 @@ import org.eclipse.che.api.core.ForbiddenException;
 import org.eclipse.che.api.core.ServerException;
 import org.eclipse.che.api.core.rest.Service;
 import org.eclipse.che.api.core.rest.annotations.GenerateLink;
+import org.eclipse.che.api.core.rest.shared.dto.Link;
+import org.eclipse.che.api.core.util.LinksHelper;
 import org.eclipse.che.api.machine.server.dao.CommandDao;
 import org.eclipse.che.api.machine.shared.Command;
 import org.eclipse.che.api.machine.shared.dto.CommandDescriptor;
@@ -40,15 +42,19 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import java.util.List;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static org.eclipse.che.api.machine.server.Constants.LINK_REL_CREATE_COMMAND;
+import static org.eclipse.che.api.machine.server.Constants.LINK_REL_GET_ALL_COMMANDS;
+import static org.eclipse.che.api.machine.server.Constants.LINK_REL_GET_COMMAND;
 import static org.eclipse.che.api.machine.server.Constants.LINK_REL_REMOVE_COMMAND;
 
 /**
@@ -128,13 +134,15 @@ public class CommandService extends Service {
                              }).toList();
     }
 
+    //TODO consider update flow
+
     @PUT
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
     @RolesAllowed("user")
     public CommandDescriptor updateCommand(CommandUpdate update) throws ApiException {
         if (update == null) {
-            throw new ForbiddenException("Update required");
+            throw new ForbiddenException("Command update required");
         }
         if (update.getId() == null) {
             throw new ForbiddenException("Command id required");
@@ -145,31 +153,56 @@ public class CommandService extends Service {
         if (!command.getCreator().equals(user.getId())) {
             throw new ForbiddenException(format("User '%s' doesn't have access to update command '%s'", user.getId(), update.getId()));
         }
-
         commandDao.update(update);
-
         return asCommandDescriptor(commandDao.getCommand(update.getId()));
     }
 
     @DELETE
     @Path("/{id}")
     @GenerateLink(rel = LINK_REL_REMOVE_COMMAND)
-    @RolesAllowed({"user", "system/admin", "system/manager"})
-    public void removeCommand(@PathParam("id") String id) {
-
+    @RolesAllowed("user")
+    public void removeCommand(@PathParam("id") String id) throws ApiException {
+        final Command command = commandDao.getCommand(id);
+        final User user = EnvironmentContext.getCurrent().getUser();
+        if (!command.getCreator().equals(user.getId())) {
+            throw new ForbiddenException(format("User '%s' doesn't have access to update command '%s'", user.getId(), id));
+        }
+        commandDao.remove(id);
     }
 
     private CommandDescriptor asCommandDescriptor(Command command) {
-        //TODO add links
-        return DtoFactory.getInstance()
-                         .createDto(CommandDescriptor.class)
-                         .withId(command.getId())
-                         .withName(command.getName())
-                         .withCreator(EnvironmentContext.getCurrent().getUser().getId())
-                         .withWorkspaceId(command.getWorkspaceId())
-                         .withCommandLine(command.getCommandLine())
-                         .withType(command.getType())
-                         .withVisibility(command.getVisibility())
-                         .withWorkingDir(command.getWorkingDir());
+        final UriBuilder builder = getServiceContext().getServiceUriBuilder();
+        final Link getLink = LinksHelper.createLink("GET",
+                                                    builder.clone()
+                                                           .path(getClass(), "getCommand")
+                                                           .build(command.getId())
+                                                           .toString(),
+                                                    APPLICATION_JSON,
+                                                    LINK_REL_GET_COMMAND);
+        final Link removeLink = LinksHelper.createLink("DELETE",
+                                                       builder.clone()
+                                                              .path(getClass(), "removeCommand")
+                                                              .build(command.getId())
+                                                              .toString(),
+                                                       LINK_REL_REMOVE_COMMAND);
+        final Link getAllLink = LinksHelper.createLink("GET",
+                                                       builder.clone()
+                                                              .path(getClass(), "getCommands")
+                                                              .build(command.getWorkspaceId())
+                                                              .toString(),
+                                                       APPLICATION_JSON,
+                                                       LINK_REL_GET_ALL_COMMANDS);
+        final CommandDescriptor descriptor = DtoFactory.getInstance()
+                                                       .createDto(CommandDescriptor.class)
+                                                       .withId(command.getId())
+                                                       .withName(command.getName())
+                                                       .withCreator(EnvironmentContext.getCurrent().getUser().getId())
+                                                       .withWorkspaceId(command.getWorkspaceId())
+                                                       .withCommandLine(command.getCommandLine())
+                                                       .withType(command.getType())
+                                                       .withVisibility(command.getVisibility())
+                                                       .withWorkingDir(command.getWorkingDir());
+        descriptor.setLinks(asList(getLink, removeLink, getAllLink));
+        return descriptor;
     }
 }
