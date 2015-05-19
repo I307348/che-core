@@ -18,19 +18,50 @@ package org.eclipse.che.api.machine.shared;
  */
 public interface Command {
 
+    /**
+     * Returns command unique identifier
+     */
     String getId();
 
+    /**
+     * Returns command name (i.e. 'start tomcat')
+     * <p>
+     * The name should be unique per user in one workspace,
+     * which means that user may create only one command with the same name in the same workspace
+     */
     String getName();
 
+    /**
+     * Returns command line (i.e. 'mvn clean install') which is going to be executed
+     * <p>
+     * Serves as a base for {@link Process} creation.
+     *
+     * @see Process#getCommandLine()
+     */
     String getCommandLine();
 
+    /**
+     * Returns identifier of user who is the command creator
+     */
     String getCreator();
 
+    /**
+     * Returns workspace identifier which command is related into
+     */
     String getWorkspaceId();
 
+    /**
+     * Returns command visibility (i.e. 'private')
+     */
     String getVisibility();
 
+    /**
+     * Returns command type (i.e. 'maven')
+     */
     String getType();
 
+    /**
+     * Returns absolute path to directory where the command should be executed
+     */
     String getWorkingDir();
 }
