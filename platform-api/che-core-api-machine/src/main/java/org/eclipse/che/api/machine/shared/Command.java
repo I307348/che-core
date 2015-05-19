@@ -46,7 +46,7 @@ public interface Command {
     String getCreator();
 
     /**
-     * Returns workspace identifier which command is related into
+     * Returns workspace identifier which command is related with
      */
     String getWorkspaceId();
 
