@@ -95,6 +95,9 @@ public class KeyBindingManager implements KeyBindingAgent {
     private void runActions(Array<String> actionIds) {
         for (String actionId : actionIds.asIterable()) {
             Action action = actionManager.getAction(actionId);
+            if(action == null){
+                continue;
+            }
             ActionEvent e = new ActionEvent("", presentationFactory.getPresentation(action), actionManager, 0);
             action.update(e);
             if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
