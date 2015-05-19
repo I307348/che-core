@@ -46,7 +46,7 @@ public interface CommandDao {
     /**
      * Updates existing command
      * <p>
-     * All data except of command identifier, creator and workspace identifier may be updated
+     * All data except of command identifier, type, creator and workspace identifier may be updated
      *
      * @param update
      *         command update
