@@ -56,6 +56,7 @@ import static org.eclipse.che.api.machine.server.Constants.LINK_REL_CREATE_COMMA
 import static org.eclipse.che.api.machine.server.Constants.LINK_REL_GET_ALL_COMMANDS;
 import static org.eclipse.che.api.machine.server.Constants.LINK_REL_GET_COMMAND;
 import static org.eclipse.che.api.machine.server.Constants.LINK_REL_REMOVE_COMMAND;
+import static org.eclipse.che.api.machine.server.Constants.LINK_REL_UPDATE_COMMAND;
 
 /**
  * Command API
@@ -139,6 +140,7 @@ public class CommandService extends Service {
     @PUT
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
+    @GenerateLink(rel = LINK_REL_UPDATE_COMMAND)
     @RolesAllowed("user")
     public CommandDescriptor updateCommand(CommandUpdate update) throws ApiException {
         if (update == null) {
