@@ -24,7 +24,7 @@ public class Constants {
     public static final String LINK_REL_CREATE_COMMAND         = "create command";
     public static final String LINK_REL_REMOVE_COMMAND         = "remove command";
     public static final String LINK_REL_GET_COMMAND            = "get command";
-    public static final String LINK_REL_GET_ALL_COMMANDS       = "get all commands";
+    public static final String LINK_REL_GET_ALL_COMMANDS       = "get workspace commands";
 
     private Constants() {
     }
