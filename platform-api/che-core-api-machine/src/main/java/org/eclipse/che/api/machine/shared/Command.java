@@ -11,7 +11,7 @@
 package org.eclipse.che.api.machine.shared;
 
 /**
- * Command that can be used to create {@link Process} in a machine.
+ * Command that can be used to create {@link Process} in a machine
  *
  * @author gazarenkov
  * @author Eugene Voevodin
