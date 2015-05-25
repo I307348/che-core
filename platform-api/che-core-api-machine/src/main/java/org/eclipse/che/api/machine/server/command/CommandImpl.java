@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.che.api.machine.server.command;
 
-import org.eclipse.che.api.machine.shared.Command;
-
 import java.util.Objects;
 
 /**

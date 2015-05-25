@@ -15,7 +15,6 @@ import com.jayway.restassured.response.Response;
 import org.eclipse.che.api.core.rest.ApiExceptionMapper;
 import org.eclipse.che.api.core.rest.shared.dto.ServiceError;
 import org.eclipse.che.api.machine.server.dao.CommandDao;
-import org.eclipse.che.api.machine.shared.Command;
 import org.eclipse.che.api.machine.shared.dto.CommandDescriptor;
 import org.eclipse.che.api.machine.shared.dto.CommandUpdate;
 import org.eclipse.che.api.machine.shared.dto.NewCommand;

@@ -13,7 +13,7 @@ package org.eclipse.che.api.machine.server.dao;
 import org.eclipse.che.api.core.ConflictException;
 import org.eclipse.che.api.core.NotFoundException;
 import org.eclipse.che.api.core.ServerException;
-import org.eclipse.che.api.machine.shared.Command;
+import org.eclipse.che.api.machine.server.command.Command;
 
 import java.util.List;
 

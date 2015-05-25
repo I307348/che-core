@@ -22,7 +22,6 @@ import org.eclipse.che.api.core.rest.annotations.GenerateLink;
 import org.eclipse.che.api.core.rest.shared.dto.Link;
 import org.eclipse.che.api.core.util.LinksHelper;
 import org.eclipse.che.api.machine.server.dao.CommandDao;
-import org.eclipse.che.api.machine.shared.Command;
 import org.eclipse.che.api.machine.shared.dto.CommandDescriptor;
 import org.eclipse.che.api.machine.shared.dto.CommandUpdate;
 import org.eclipse.che.api.machine.shared.dto.NewCommand;
