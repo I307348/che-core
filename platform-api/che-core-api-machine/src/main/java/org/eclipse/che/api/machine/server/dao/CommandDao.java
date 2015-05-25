@@ -54,10 +54,12 @@ public interface CommandDao {
      *         when {@code update} is null
      * @throws NotFoundException
      *         when command with specified identifier does not exist
+     * @throws ConflictException
+     *         when command with specified {@code name} already exists for current user in given workspace
      * @throws ServerException
      *         when any other error occurs
      */
-    void update(Command update) throws NotFoundException, ServerException;
+    void update(Command update) throws NotFoundException, ServerException, ConflictException;
 
     /**
      * Removes command

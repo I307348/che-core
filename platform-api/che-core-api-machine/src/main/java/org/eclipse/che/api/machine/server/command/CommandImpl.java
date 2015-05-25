@@ -172,4 +172,18 @@ public class CommandImpl implements Command {
         hash = 31 * hash + Objects.hashCode(workingDir);
         return hash;
     }
+
+    @Override
+    public String toString() {
+        return "CommandImpl{" +
+               "id='" + id + '\'' +
+               ", name='" + name + '\'' +
+               ", commandLine='" + commandLine + '\'' +
+               ", creator='" + creator + '\'' +
+               ", workspaceId='" + workspaceId + '\'' +
+               ", visibility='" + visibility + '\'' +
+               ", type='" + type + '\'' +
+               ", workingDir='" + workingDir + '\'' +
+               '}';
+    }
 }
