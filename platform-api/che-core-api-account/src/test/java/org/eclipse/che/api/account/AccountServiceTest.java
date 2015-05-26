@@ -13,12 +13,9 @@ package org.eclipse.che.api.account;
 import org.eclipse.che.api.account.server.AccountService;
 import org.eclipse.che.api.account.server.Constants;
 import org.eclipse.che.api.account.server.ResourcesManager;
-import org.eclipse.che.api.account.server.SubscriptionService;
-import org.eclipse.che.api.account.server.SubscriptionServiceRegistry;
 import org.eclipse.che.api.account.server.dao.Account;
 import org.eclipse.che.api.account.server.dao.AccountDao;
 import org.eclipse.che.api.account.server.dao.Member;
-import org.eclipse.che.api.account.server.dao.PlanDao;
 import org.eclipse.che.api.account.shared.dto.AccountDescriptor;
 import org.eclipse.che.api.account.shared.dto.AccountUpdate;
 import org.eclipse.che.api.account.shared.dto.MemberDescriptor;
@@ -104,19 +101,10 @@ public class AccountServiceTest {
     private UserDao userDao;
 
     @Mock
-    private PlanDao planDao;
-
-    @Mock
     private ResourcesManager resourcesManager;
 
     @Mock
     private SecurityContext securityContext;
-
-    @Mock
-    private SubscriptionServiceRegistry serviceRegistry;
-
-    @Mock
-    private SubscriptionService subscriptionService;
 
     @Mock
     private EnvironmentContext environmentContext;
@@ -134,10 +122,8 @@ public class AccountServiceTest {
         providers = new ApplicationProviderBinder();
         DependencySupplierImpl dependencies = new DependencySupplierImpl();
         dependencies.addComponent(UserDao.class, userDao);
-        dependencies.addComponent(PlanDao.class, planDao);
         dependencies.addComponent(ResourcesManager.class, resourcesManager);
         dependencies.addComponent(AccountDao.class, accountDao);
-        dependencies.addComponent(SubscriptionServiceRegistry.class, serviceRegistry);
         resources.addResource(AccountService.class, null);
         EverrestProcessor processor = new EverrestProcessor(resources, providers, dependencies, new EverrestConfiguration(), null);
         launcher = new ResourceLauncher(processor);

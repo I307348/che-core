@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.che.api.account.server.dao;
 
-import com.google.common.annotations.Beta;
-
 import org.eclipse.che.api.core.ConflictException;
-import org.eclipse.che.api.core.ForbiddenException;
 import org.eclipse.che.api.core.NotFoundException;
 import org.eclipse.che.api.core.ServerException;
 
