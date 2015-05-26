@@ -34,12 +34,14 @@ import javax.annotation.Nullable;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -122,8 +124,13 @@ public class CommandService extends Service {
     @GET
     @Path("/{ws-id}/all")
     @Produces(APPLICATION_JSON)
-    public List<CommandDescriptor> getCommands(@PathParam("ws-id") String workspaceId) throws ServerException {
-        final List<Command> commands = commandDao.getCommands(workspaceId, EnvironmentContext.getCurrent().getUser().getId());
+    public List<CommandDescriptor> getCommands(@PathParam("ws-id") String workspaceId,
+                                               @DefaultValue("0") @QueryParam("skipCount") Integer skipCount,
+                                               @DefaultValue("30") @QueryParam("maxItems") Integer maxItems) throws ServerException {
+        final List<Command> commands = commandDao.getCommands(workspaceId,
+                                                              EnvironmentContext.getCurrent().getUser().getId(),
+                                                              skipCount,
+                                                              maxItems);
         return FluentIterable.from(commands)
                              .transform(new Function<Command, CommandDescriptor>() {
                                  @Nullable

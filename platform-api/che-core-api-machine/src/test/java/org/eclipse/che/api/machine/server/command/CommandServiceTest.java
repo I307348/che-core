@@ -273,7 +273,7 @@ public class CommandServiceTest {
                                                   .withWorkspaceId("workspace123")
                                                   .withVisibility("public")
                                                   .withCreator("someone");
-        when(commandDao.getCommands("workspace123", USER_ID)).thenReturn(asList(command1, command2));
+        when(commandDao.getCommands("workspace123", USER_ID, 0 , 30)).thenReturn(asList(command1, command2));
 
         final Response response = given().auth()
                                          .basic(ADMIN_USER_NAME, ADMIN_USER_PASSWORD)

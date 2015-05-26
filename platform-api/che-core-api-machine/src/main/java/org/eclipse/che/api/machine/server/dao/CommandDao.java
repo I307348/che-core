@@ -79,6 +79,7 @@ public interface CommandDao {
      *
      * @param id
      *         command identifier to search command
+     *         max count of items to fetch
      * @return found command
      * @throws NullPointerException
      *         when {@code id} is {@code null}
@@ -98,10 +99,16 @@ public interface CommandDao {
      *         workspace identifier to search related commands
      * @param creator
      *         user identifier to search created by certain user commands
+     * @param skipCount
+     *         count of items which should be skipped,
+     *         if found items contain fewer than {@code skipCount} items
+     *         then empty list will be returned
+     * @param maxItems
+     *         max count of items to fetch
      * @return found commands
      * @throws ServerException
      *         when any error occurs
      */
-    List<Command> getCommands(String workspaceId, String creator) throws ServerException;
+    List<Command> getCommands(String workspaceId, String creator, int skipCount, int maxItems) throws ServerException;
 }
 
