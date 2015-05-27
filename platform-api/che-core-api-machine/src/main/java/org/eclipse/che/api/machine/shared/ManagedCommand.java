@@ -1,4 +1,4 @@
-package org.eclipse.che.api.machine.server.command;
+package org.eclipse.che.api.machine.shared;
 
 /*******************************************************************************
  * Copyright (c) 2012-2015 Codenvy, S.A.
@@ -11,15 +11,12 @@ package org.eclipse.che.api.machine.server.command;
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
 
-import org.eclipse.che.api.machine.shared.Process;
-
 /**
- * Command that can be used to create {@link org.eclipse.che.api.machine.shared.Process} in a machine
+ * Command that can be used to create {@link Process} in a machine
  *
- * @author gazarenkov
  * @author Eugene Voevodin
  */
-public interface Command extends org.eclipse.che.api.machine.shared.Command {
+public interface ManagedCommand extends Command {
 
     /**
      * Returns command unique identifier

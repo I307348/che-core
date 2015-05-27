@@ -13,12 +13,12 @@ package org.eclipse.che.api.machine.server.dao;
 import org.eclipse.che.api.core.ConflictException;
 import org.eclipse.che.api.core.NotFoundException;
 import org.eclipse.che.api.core.ServerException;
-import org.eclipse.che.api.machine.server.command.Command;
+import org.eclipse.che.api.machine.shared.ManagedCommand;
 
 import java.util.List;
 
 /**
- * Data access object for {@link Command}
+ * Data access object for {@link ManagedCommand}
  *
  * @author Eugene Voevodin
  */
@@ -41,7 +41,7 @@ public interface CommandDao {
      * @throws ServerException
      *         when any other error occurs
      */
-    void create(Command command) throws ConflictException, ServerException;
+    void create(ManagedCommand command) throws ConflictException, ServerException;
 
     /**
      * Updates existing command
@@ -59,7 +59,7 @@ public interface CommandDao {
      * @throws ServerException
      *         when any other error occurs
      */
-    void update(Command update) throws NotFoundException, ServerException, ConflictException;
+    void update(ManagedCommand update) throws NotFoundException, ServerException, ConflictException;
 
     /**
      * Removes command
@@ -88,7 +88,7 @@ public interface CommandDao {
      * @throws ServerException
      *         when any other error occurs
      */
-    Command getCommand(String id) throws NotFoundException, ServerException;
+    ManagedCommand getCommand(String id) throws NotFoundException, ServerException;
 
     /**
      * Searches for commands which are available for certain user in certain workspace
@@ -109,6 +109,6 @@ public interface CommandDao {
      * @throws ServerException
      *         when any error occurs
      */
-    List<Command> getCommands(String workspaceId, String creator, int skipCount, int maxItems) throws ServerException;
+    List<ManagedCommand> getCommands(String workspaceId, String creator, int skipCount, int maxItems) throws ServerException;
 }
 

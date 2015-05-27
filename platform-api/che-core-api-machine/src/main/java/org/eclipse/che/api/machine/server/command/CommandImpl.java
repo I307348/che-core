@@ -10,14 +10,16 @@
  *******************************************************************************/
 package org.eclipse.che.api.machine.server.command;
 
+import org.eclipse.che.api.machine.shared.ManagedCommand;
+
 import java.util.Objects;
 
 /**
- * Implementation of {@link Command}
+ * Implementation of {@link ManagedCommand}
  *
  * @author Eugene Voevodin
  */
-public class CommandImpl implements Command {
+public class CommandImpl implements ManagedCommand {
 
     private String id;
     private String name;

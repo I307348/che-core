@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.che.api.machine.shared.dto;
 
-import org.eclipse.che.api.machine.server.command.Command;
+import org.eclipse.che.api.machine.shared.ManagedCommand;
 import org.eclipse.che.dto.shared.DTO;
 
 /**
  * @author Eugene Voevodin
  */
 @DTO
-public interface CommandUpdate extends Command {
+public interface CommandUpdate extends ManagedCommand {
 
     void setId(String id);
 

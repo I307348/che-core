@@ -11,7 +11,7 @@
 package org.eclipse.che.api.machine.shared.dto;
 
 import org.eclipse.che.api.core.rest.shared.dto.Hyperlinks;
-import org.eclipse.che.api.machine.server.command.Command;
+import org.eclipse.che.api.machine.shared.ManagedCommand;
 import org.eclipse.che.dto.shared.DTO;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.che.dto.shared.DTO;
  * @author Eugene Voevodin
  */
 @DTO
-public interface CommandDescriptor extends Command, Hyperlinks {
+public interface CommandDescriptor extends ManagedCommand, Hyperlinks {
 
     /**
      * Channel of websocket where command execution logs should be put

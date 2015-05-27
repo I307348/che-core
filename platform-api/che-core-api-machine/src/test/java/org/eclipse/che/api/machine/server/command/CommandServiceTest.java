@@ -15,6 +15,7 @@ import com.jayway.restassured.response.Response;
 import org.eclipse.che.api.core.rest.ApiExceptionMapper;
 import org.eclipse.che.api.core.rest.shared.dto.ServiceError;
 import org.eclipse.che.api.machine.server.dao.CommandDao;
+import org.eclipse.che.api.machine.shared.ManagedCommand;
 import org.eclipse.che.api.machine.shared.dto.CommandDescriptor;
 import org.eclipse.che.api.machine.shared.dto.CommandUpdate;
 import org.eclipse.che.api.machine.shared.dto.NewCommand;
@@ -174,7 +175,7 @@ public class CommandServiceTest {
                                          .when()
                                          .post(SECURE_PATH + "/command/workspace123");
 
-        verify(commandDao).create(any(Command.class));
+        verify(commandDao).create(any(ManagedCommand.class));
         final CommandDescriptor descriptor = unwrapDto(response, CommandDescriptor.class);
         assertNotNull(descriptor.getId());
         assertEquals(descriptor.getName(), newCommand.getName());
@@ -197,7 +198,7 @@ public class CommandServiceTest {
                                          .when()
                                          .post(SECURE_PATH + "/command/workspace123");
 
-        verify(commandDao).create(any(Command.class));
+        verify(commandDao).create(any(ManagedCommand.class));
         assertEquals(unwrapDto(response, CommandDescriptor.class).getVisibility(), "private");
     }
 
@@ -265,11 +266,11 @@ public class CommandServiceTest {
 
     @Test
     public void shouldBeAbleToGetCommands() throws Exception {
-        final Command command1 = new CommandImpl().withId("command123")
+        final ManagedCommand command1 = new CommandImpl().withId("command123")
                                                   .withWorkspaceId("workspace123")
                                                   .withVisibility("public")
                                                   .withCreator("someone");
-        final Command command2 = new CommandImpl().withId("command234")
+        final ManagedCommand command2 = new CommandImpl().withId("command234")
                                                   .withWorkspaceId("workspace123")
                                                   .withVisibility("public")
                                                   .withCreator("someone");
@@ -349,7 +350,7 @@ public class CommandServiceTest {
                                                                 .withName("new name")
                                                                 .withCommandLine("new command line")
                                                                 .withVisibility("private");
-        final Command command = new CommandImpl().withId("command123")
+        final ManagedCommand command = new CommandImpl().withId("command123")
                                                  .withVisibility("private")
                                                  .withWorkspaceId("workspace123")
                                                  .withCreator(USER_ID);
@@ -373,7 +374,7 @@ public class CommandServiceTest {
                                                                 .withName("new name")
                                                                 .withCommandLine("new command line")
                                                                 .withVisibility("private");
-        final Command command = new CommandImpl().withId("command123")
+        final ManagedCommand command = new CommandImpl().withId("command123")
                                                  .withCreator("someone");
         when(commandDao.getCommand(command.getId())).thenReturn(command);
 

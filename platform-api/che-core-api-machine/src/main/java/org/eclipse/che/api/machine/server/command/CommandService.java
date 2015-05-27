@@ -22,6 +22,7 @@ import org.eclipse.che.api.core.rest.annotations.GenerateLink;
 import org.eclipse.che.api.core.rest.shared.dto.Link;
 import org.eclipse.che.api.core.util.LinksHelper;
 import org.eclipse.che.api.machine.server.dao.CommandDao;
+import org.eclipse.che.api.machine.shared.ManagedCommand;
 import org.eclipse.che.api.machine.shared.dto.CommandDescriptor;
 import org.eclipse.che.api.machine.shared.dto.CommandUpdate;
 import org.eclipse.che.api.machine.shared.dto.NewCommand;
@@ -111,7 +112,7 @@ public class CommandService extends Service {
     @Produces(APPLICATION_JSON)
     @RolesAllowed({"user", "system/admin", "system/manager"})
     public CommandDescriptor getCommand(@PathParam("id") String id) throws ApiException {
-        final Command command = commandDao.getCommand(id);
+        final ManagedCommand command = commandDao.getCommand(id);
         final User user = EnvironmentContext.getCurrent().getUser();
         if (!"public".equals(command.getVisibility()) && !user.getId().equals(command.getCreator())) {
             throw new ForbiddenException(format("User '%s' doesn't have access to command '%s'", user.getId(), command.getId()));
@@ -127,15 +128,15 @@ public class CommandService extends Service {
     public List<CommandDescriptor> getCommands(@PathParam("ws-id") String workspaceId,
                                                @DefaultValue("0") @QueryParam("skipCount") Integer skipCount,
                                                @DefaultValue("30") @QueryParam("maxItems") Integer maxItems) throws ServerException {
-        final List<Command> commands = commandDao.getCommands(workspaceId,
+        final List<ManagedCommand> commands = commandDao.getCommands(workspaceId,
                                                               EnvironmentContext.getCurrent().getUser().getId(),
                                                               skipCount,
                                                               maxItems);
         return FluentIterable.from(commands)
-                             .transform(new Function<Command, CommandDescriptor>() {
+                             .transform(new Function<ManagedCommand, CommandDescriptor>() {
                                  @Nullable
                                  @Override
-                                 public CommandDescriptor apply(Command command) {
+                                 public CommandDescriptor apply(ManagedCommand command) {
                                      return asCommandDescriptor(command);
                                  }
                              }).toList();
@@ -156,7 +157,7 @@ public class CommandService extends Service {
             throw new ForbiddenException("Command id required");
         }
         //check that current user is command creator
-        final Command command = commandDao.getCommand(update.getId());
+        final ManagedCommand command = commandDao.getCommand(update.getId());
         final User user = EnvironmentContext.getCurrent().getUser();
         if (!command.getCreator().equals(user.getId())) {
             throw new ForbiddenException(format("User '%s' doesn't have access to update command '%s'", user.getId(), update.getId()));
@@ -170,7 +171,7 @@ public class CommandService extends Service {
     @GenerateLink(rel = LINK_REL_REMOVE_COMMAND)
     @RolesAllowed("user")
     public void removeCommand(@PathParam("id") String id) throws ApiException {
-        final Command command = commandDao.getCommand(id);
+        final ManagedCommand command = commandDao.getCommand(id);
         final User user = EnvironmentContext.getCurrent().getUser();
         if (!command.getCreator().equals(user.getId())) {
             throw new ForbiddenException(format("User '%s' doesn't have access to update command '%s'", user.getId(), id));
@@ -178,7 +179,7 @@ public class CommandService extends Service {
         commandDao.remove(id);
     }
 
-    private CommandDescriptor asCommandDescriptor(Command command) {
+    private CommandDescriptor asCommandDescriptor(ManagedCommand command) {
         final UriBuilder builder = getServiceContext().getServiceUriBuilder();
         final Link getLink = LinksHelper.createLink("GET",
                                                     builder.clone()
